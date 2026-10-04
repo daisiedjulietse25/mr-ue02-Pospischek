@@ -34,8 +34,8 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 Dann habe ich das prefab-File vom Fuchs ebenfalls in das MarkerContent Objekt gezogen und so das Objekt in einen neu angelegten Ordner "Prefab" abgelegt. Dies erstellt eine neue prefab-Datei, die ich dann in der Reference image Library hinzugefügt habe. Danach habe ich dann das Objekt in der Hierarcy gelöscht, damit es nicht von anfang an sichtbar ist und erst durch das Image, das getrackt wird, sichtbar wird.
 
-## 4. Testen des Image Tracking und Build für iOS
-XXXX
+## 4. Testen des Image Tracking auf iPhone mit Build für iOS
+Dannach habe ich einen Build für iOS in Unity auf meinem Windows Laptop erstellt und in einem neuen Ordner im Projekt gespeichert. Dann habe ich den Ordner gezippt und durch Google Drive auf mein Macbook transferiert. In dem entzippten Ordner habe ich dann das XCode Projekt geöffnet, um so für mein iPhone kompilieren zu können. 
 
 ## 5. Bewegung des Assets
 
