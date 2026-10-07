@@ -1,8 +1,12 @@
-# Mixed Reality Eigenstudium 
-
+# Mixed Reality Eigenstudium D: XR in Unity
 
 ## 1. Projektbeschreibung 
-XXXX
+
+Aufgabe der 2. Übung war es, Image Tracking und XR in Unity zu verstehen und umzusetzen. Eine Figur soll mit ihrem Untergrund durch einen Image Marker im Raum erscheinen. Dafür wurde als AR Framework für Unity AR Foundation gewählt. Dann soll die Sichtbarkeit der Figur und ein Springen als Veränderung der vertikalen Koordinate der Figur umgesetzt werden basierend auf der Entfernung des Handys zum Bild. Zuletzt sollte noch eine Touch-Interaktion eingebaut werden, die das Model Laufen lässt. Es soll das Ende des Untergrundes erkannt werden und alle diese Features mit einander arbeiten. 
+
+Dafür wurde ein free Asset aus dem Unity Store heruntergeladen, das ImageTracking im Inspektor in Unity eingestellt und dann Skripte für die Sichtbarkeit, das Springen und das Laufen erstellt.
+
+Weil ich scheinbar eine masochistische Veranlagung habe und ohne es zu wissen ein sehr dummes Setup besitze, habe ich auf meinem Windows Laptop in Unity das Image Tracking und die C#-Skripte implementiert und einen Build erstellt, dann aufgrund der Größe der Dateien den Build komprimiert und per Google Drive auf mein Macbook transferiert, um dann das Projekt in XCode final zu builden und auf meinem iPhone zum Laufen zu lassen. Dies hat zu ein paar Problemen wegen den notwendigen Einstellungen geführt, die aber durch Recherche und KI-Einsatz behoben werden konnten. 
 
 ## 2. Aufsetzen des Projekts
 
@@ -14,31 +18,78 @@ Danach habe ich unter File/Build Profiles die Plattform von Windows auf iOS gewe
 
 Dann habe ich noch unter XR Plug-in Management kontrolliert, ob Apple ARKit als Plugin Provider ausgewählt ist und das es in den Einstellungen von Apple ARKit auch "Required" ausgewählt hat.
 
-
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-AR Mobile Project DONE → iOS als Plattform DONE → AR Foundation prüfen DONE → ARKit XR Plugin installieren/aktivieren DONE → 
-Image Tracking einrichten → Modell + Plane auf Marker → erster Test auf dem iPhone → danach die eigentlichen Skripte.
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
 ## 3. Image Tracking
 
-Um die Konfiguration von AR Foundation und dem Switch zum MAcbook zu testen, habe ich als erstes das Image Tracking (mit Hilfe der Dokumentation https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.6/manual/features/image-tracking.html) eingerichtet. 
+Um die Konfiguration von AR Foundation und dem Switch zum Macbook zu testen, habe ich als erstes das Image Tracking (mit Hilfe der Dokumentation https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.6/manual/features/image-tracking.html) eingerichtet. 
 
-Unter Assets im Project Window in Unity ist schon ein XR Ordner angelegt. In diesem konnte ich dann die Option "Reference Image Library" auswählen. Im XR Folder habe ich außerdem einen neuen Ordner "Images" erstellt und dort ein quadratisches jpg-Bild vom Unity Logo gespeichert. Dann habe ich der Reference Image Library dieses Bild übergeben. Die "Specifiy size" in Meter habe ich auf 0.11 gestellt, weil ich das Bild dann in eine Word-Datei eingefügt und auf 11 cm Größe eingestellt habe.
+Unter Assets im Project Window in Unity ist schon ein XR Ordner angelegt. In diesem konnte ich dann die Option "Reference Image Library" auswählen. Im XR Folder habe ich außerdem einen neuen Ordner "Images" erstellt und dort ein quadratisches jpg-Bild vom Unity Logo als Marker.png gespeichert. Dann habe ich der Reference Image Library dieses Bild übergeben. Die "Specifiy size" in Meter habe ich auf 0.11 gestellt, weil ich das Bild dann in eine Word-Datei eingefügt und auf 11 cm Größe eingestellt habe.
 
-Zum XR Origin Objekt in dem Hierarchy Window habe ich die "AR Tracked Image Manager" Konponente hinzugefügt. Unter "Serialized Library" habe ich dann die Reference Image Library eingefügt, die ich davor erstellt habe und mit dem Bild befüllt habe. Dann habe ich in der Hierarchy ein neues Objekt "MarkerContent" genannt, da unter "Tracked Image Prefab" noch kein Game Object hinterlegt ist. Ich habe dem MarkerContent das 3D-Objekt Plane hinzugefügt. 
+![Foto von dem Laptop mit dem Unity Logo als Marker in der eingestellten Größe in einer Word-Datei, wo mit der App dann die Plane und das Asset hinprojiziert werden](IMG_1077.jpg)
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-Da diese im der XZ-Ebene liegen soll, habe ich ihr die Koordinaten (0.011,1,0.011) für Scale gegeben, um 1 Einheit hoch und gleich breit wie das Bild zu sein. 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Zum XR Origin Objekt in dem Hierarchy Window habe ich die "AR Tracked Image Manager" Konponente hinzugefügt. Unter "Serialized Library" habe ich dann die Reference Image Library eingefügt, die ich davor erstellt habe und mit dem Bild befüllt habe. Dann habe ich in der Hierarchy ein neues Objekt "MarkerContent" genannt, da unter "Tracked Image Prefab" noch kein Game Object hinterlegt ist. Ich habe dem MarkerContent das 3D-Objekt Plane hinzugefügt, ein Material erstellt und dieses der Plane angehängt sowie die Farbe auf Grün für eine Wiese eingestellt. 
 
-Dann habe ich das prefab-File vom Fuchs ebenfalls in das MarkerContent Objekt gezogen und so das Objekt in einen neu angelegten Ordner "Prefab" abgelegt. Dies erstellt eine neue prefab-Datei, die ich dann in der Reference image Library hinzugefügt habe. Danach habe ich dann das Objekt in der Hierarcy gelöscht, damit es nicht von anfang an sichtbar ist und erst durch das Image, das getrackt wird, sichtbar wird.
+Dann habe ich das prefab-File vom Fuchs ebenfalls in das MarkerContent Objekt gezogen, mit der passenden Texture ausgestattet und das ganze Objekt aus der Hierarcy in einen neu angelegten Ordner "Prefab" im Project Window abgelegt. Dies erstellt eine neue prefab-Datei, die ich dann in der Reference Image Library hinzugefügt habe und den Fuchs mit dem Untergrund enthält. Danach habe ich dann das Objekt in der Hierarcy gelöscht, damit es nicht von Anfang an sichtbar ist und erst durch das Image, das getrackt wird, sichtbar wird.
+
+![Grüne Wiese ist sichtbar aber der Fuchs nicht, weil die Handykamera mehr als 1 Meter von dem Marker entfernt ist](IMG_1076.PNG)
 
 ## 4. Testen des Image Tracking auf iPhone mit Build für iOS
-Dannach habe ich einen Build für iOS in Unity auf meinem Windows Laptop erstellt und in einem neuen Ordner im Projekt gespeichert. Dann habe ich den Ordner gezippt und durch Google Drive auf mein Macbook transferiert. In dem entzippten Ordner habe ich dann das XCode Projekt geöffnet, um so für mein iPhone kompilieren zu können. 
 
-## 5. Bewegung des Assets
+Dannach habe ich einen Build für iOS in Unity auf meinem Windows Laptop erstellt und in einem neuen Ordner im Projekt gespeichert. Dann habe ich den Ordner gezippt und durch Google Drive auf mein Macbook transferiert. In dem entzippten Ordner habe ich dann das XCode Projekt geöffnet, um so für mein iPhone kompilieren zu können. Hierbei musste ich noch das automatisch gemanagte Signing einstellen und mich selbst beim Team auswählen. Dann habe ich die Build Settings das Unity Frameworks noch dahingehend einstellen müssen, dass der Wert "Enable Module Verifier" auf Nein gesetzt ist und dass für das Unity Phone und das Unity Framework der Wert "User Script Sandboxing" ebenfalls auf nein gesetzt ist. Danach konnte der Build in XCode gestartet. Auf dem verbundenen iPhone habe ich unter Datenschutz & Sicherheit den Entwicklermodus angeschalten und beim ersten Mal unter VPN und Geräteverwaltung meiner Entwickler-App, die mit meinem Account verbunden ist, vertraut. Dann habe ich die Word-Datei mit dem Bild vom Unity Logo ausgedruckt (und manchmal einfach den Bildschirm meines Win-Laptops flach auf den Tisch geklappt) und in der App erfolgreich die Wiese mit dem Fuchs erscheinen lassen. 
 
+![Screenshot von Projekt in XCode auf dem Macbook mit der Signing Einstellung, die auf automatically gesetzt werden muss](<Screenshot 2026-10-07 at 23.01.42.png>)
 
+![Fuchs und grüne Wiese ist auf dem Handy sichtbar, wo der Laptop das Unity Logo anzeigt](IMG_1073.PNG)
 
-## 5. Interaktion mit dem Fuchs
+## 5. Sichtbarkeit des Assets und Springen basierend auf Entfernung
+
+Nachdem das Image Tracking getestet wurde und die Wiese mit dem Fuchs erscheint, sobald das Bild von der Kamera erfasst wurde, konnte der 2. Teil der Aufgabe behandelt werden, in welcher die Sichtbarkeit des Fuchses und das Springen von diesem von der Entfernung der Kamera zu dem Bild abhängen soll. Dafür wurden unter den XR Assets ein neues Monobehavior Script erstellt. In FoxDistance.cs Da die Sichtbarkeit von allen Richtungen von der Entfernung abhängen soll, wurde Vector3.Distance gewählt zwischen dem Fuchs Asset und der Kamera, die in Start() erfasst wird. Durch Recherche konnte ich herausfinden, dass 1 Unity Einheit 1 Meter entspricht. Dies war auch der Grund, weshalb ich das Prefab Asset auf 0.5 skaliert habe, damit es nicht zu groß ist. Somit habe ich dann die jumpDistance, jumpHeight und die visibilityDistance mit 0.1, 0.3 und 1.0 gewählt. In meinem MarkerContent-Objekt befindet sich die Plane und das Fuchs-Objekt. Dieses setze ich auf Active, wenn die Distanz der Kamera zu dem Bild kleiner als eine Unity-Einheit ist (und löse die Aufgabe nicht mit Shadern).
+
+Für das Springen habe ich eine eigene Methode Jump() erstellt. Da der Fuchs einmal springen soll, habe ich auch den Bool hasJumped eingeführt. Jump() wird als Coroutine aufgerufen, damit der Sprung über mehrere Frames hinweg passiert und auch wirklich sichtbar ist. Dafür brauche ich auch die jumpDuration. Die aktuelle Position des Fuches wird gespeichert und der Vektor (0,1,0) mit der jumpHeight multipliziert und dann draufaddiert. Das ist die topPosition zu der wir hinkommen wollen. Bis zur Hälfte der jumpDuration passiert eine lineare Interpolation durch Lerp vom der Startposition zum höchsten Punkt. Danach passiert die 2. while-Schleife die wieder eine lineare Interpolation macht aber dieses Mal vom höchsten Punkt zum Startpunkt zurück. 
+
+Das Script wurde dann dem MarkerContent unter Assets/XR/Prefab als eine neue Component zugewiesen und der Fuchs dem Object fox im Skript zugewiesen. Somit ist der Untergrund immer sichtbar, sobald das Bild einmal erfasst wurde, der Fuchs ist aber nur sichtbar und springt abhängig von der Entfernung. Ein Build wurde erstellt und auf das Macbook und dann das iPhone transferiert für einen Test. Danach konnte ich zu dem letzten Teil der Übung kommen.
+
+## 6. Gehen des Assets basierend auf Touch Interaktion 
+
+Im letzten Abschnitt wurde dann die Gewegungsmöglichkeiten des Assets umgesetzt und diese mit den schon vorhandenen Features kombiniert, weil dies eine explizite Anforderung war. Dafür habe ich das MonoBehaviour-Skript FoxMovement.cs erstellt und dem MarkerContent übergeben gemeinsam mit dem Fuchs als GameObject. 
+
+In Start() wird die Position des Fuches innerhalb des MarkerContent-Objekts mit localPosition gespeichert. Ich will dass der Fuchs sich entlang der Z-Achse von -0.2 zu +0.2 bewegt. So werden die Punkte A, B und current Target definiert. Dann wird mit Update() in jedem Frame überprüft, ob der Fuchs berührt wurde. Dies passiert in der Funktion CheckTouch(). Diese Funktion stoppt, wenn keine Berührungen (also 0 Finger) passieren. Wenn mindestens 1 Finger den Bildschirm berührt, so wird das Touch Objekt erstellt und die 1. Berührung genommen mit dem Index 0. Dann wollen wir sofort am Beginn der Berührung reagieren und pro Berührung nur einmal. Daher stoppen wir auch hier mit return, wenn wir uns nicht am Anfang der Touchphase befinden. Da wir den 2D-Bildschirm des Handys berühren, aber überprüfen wollen, ob der Fuchs, der in der 3D-Welt liegt, berührt wurde, wird ein Ray erstellt.
+
+Dann habe ich einen Box Collider in Unity als neue Komponente für das Fuchs-Objekt in MarkerContent erstellt. Center und Size wurden so angepasst, dass die Box den ganzen Fuchs abdeckt. Somit kann jetzt in Physics.Raycast überprüft werden, ob der erstellte Ray einen Collider trifft. Passiert dies gibt Physics.Raycast true zurück und setzt mit out hit auch die Position des Objekts, das getroffen wurde. So kann dann geprüft werden, ob der Fuchs getroffen wurde, weil dann die Koordinaten des getroffenen Objekts gleich sind wie die des Fuchses oder seinen untergeordneten Objekten. Der Fuchs ist von anfang an stationär und movementActivated ist false. Wird in einem Frame der Fuchs nicht berührt, so bleibt movementActivated false und die Update-Funktion stoppt. Wird er hingegen berührt, dann wird movementActivated auf true gesetzt und die Bewegung beginnt. Wird er wieder berührt, dann setzt sich movementActivated wieder auf false.
+
+![Fox Asset auf Plane mit grünem Material und der Collider Box mit grünem Rand im Scene Fenster in Unity](image.png)
+
+Wenn der Fuchs berührt wurde und die Update-Funktion somit noch nicht gestoppt wurde, gibt es 2 Möglichkeiten: entweder der Fuchs geht oder er dreht sich um. Er dreht sich am Rand der Plane um, also wenn Punkt A oder Punkt B erreicht wurden, und dies setzt den Bool isRotating auf true. Dann wird die Funktion RotateFox() aufgerufen. Wenn der Fuchs nicht am Rand ist, wird MoveFox() ausgeführt.In MoveFox() wird wie in der Angabe beschrieben MoveTowards() verwendet. 
+
+Wenn die localPosition vom Fuchs dem Target am Rand der Plane erreicht, dann wird die targetRotation gesetzt und der Bool isRotating wird true. Somit wird im nächsten Update dann die RotateFox-Funktion aufgerufen und nicht die Vorwärtsbewegung. In RotateFox() wird RotateTowards verwendet, wie in der Angabe beschrieben. Die targetRotation wurde schon im Frame mit der letzten Bewegung auf 180° entlang seiner y-Achse gestellt. Sobald dann der Winkel zwischen der aktuellen Rotation und der gewünschten 180° kleiner als 0.1° ist, wird das neue currentTarget gesetzt und der Bool isRotating auf false, damit im nächsten Frame wieder die Vorwärtsbewegung beginnt.
+
+## 7. Kombination der Skripte für Sichtbarkeit und Laufen 
+
+Damit die Skripte mit einander arbeiten können, habe ich in FoxDistance.cs die public Variable FoxMovement foxMovement eingefügt. Somit kann nun das Script FoxDistance auf FoxMovement zugreifen. Somit setze ich nicht nur den Fuchs auf inaktiv (also unsichtbar), wenn die Distanz der Kamera größer ist als der 1 Meter, sondern rufe SetDistancePause mit dem Input true auf. Startet der User die Bewegung und geht dann mehr als 1 Meter weg, so verschwindet der Fuchs. Die App soll sich aber merken, dass die Bewegung gestartet wurde und weiterlaufen, sobald man wieder in dem 1m-Radius ist. Daher wurde die Variable pausedByDistance in FoxMovement.cs eingeführt, die in SetDistancePause von FoxDistance.cs auf true gesetzt wird und in FoxMovement.cs die Update-Funktion, die den Fuchs laufen und drehen lässt, stoppt. Das Gegenteil passiert, wenn der Abstand kleiner als 1 Meter ist und die Bewegung wird fortgesetzt, sobald der Fuchs wieder sichtbar ist. Damit die Scripte auf einander zugreifen können, habe ich noch im Inspector FoxDistance.cs das MarkerContent Objekt übergeben, damit FoxMovement.cs verwendet werden kann. Somit ist durch die Trennung von movementActivated und pausedByDistance sichergestellt, dass der Fuchs, wenn er im gehen verschwindet wegen der Kameraentfernung, wieder an der selben stellt zu laufen anfängt, wenn er wieder sichtbar wird.  
+
+## 8. Kombination der Skripte für Sichtbarkeit, Laufen und Springen und Schatten
+
+Zuletzt muss noch das Springen mit den anderen 2 Funktionalitäten für die Sichtbarkeit und das Laufen kombiniert werden. FoxDistance.cs stellt die Sichtbarkeit ein und aktiviert den Sprung basierend auf der Entfernung. FoxMovement.cs bewegt und dreht den Fuchs und tut dies nun auch basierend auf der Sichtbarkeit wegen der Verknüpfung zu FoxDistance. Damit aber auch das Springen kombiniert werden kann, habe ich ein neues GameObject FoxMover erstellt und den Fuchs in diese Objekt als Child hineingezogen. Somit besteht nun mein MarkerContent aus der Plane und dem FoxMover. FoxMover erhält nun die Koordinaten (0,0,-0.2), die der Fuchs davor hatte. Innerhalb von FoxMover ist der Fuchs bei (0,0,0). In FoxMovement.cs habe ich das GameObject foxMover hinzugefügt. Außerdem wird nun zur Berechnung der Punkte foxMover verwendet. In CheckTouch wurden keine Anpassungen gemacht, weil der Collider an dem Fuchs dranhängt. Aber in MoveFox und RotateFox wird nun der FoxMover verwendet. Somit ist das Gehen und Umdrehen, was duch das Antippen und Treffen vom Collider ausgelöst wird, unabhängig von dem Springen, das von der Entfernung getriggert wird. Im Inspektor habe ich dann FoxMovement als Komponente vom MarkerContent, welche den Fuchs und den FoxMover jeweils als Inputwerte hat. Somit wird der Collider mit dem Fuchs gemessen, die Bewegung passiert aber über den FoxMover, der den Fuchs als sein Child "mitnimmt". 
+
+In FoxDistance.cs wird die selbe Idee umgesetzt. Die Entfernung wird über den Fuchs gemessen und pausiert FoxMovement oder aktiviert den Sprung. Aber nun wird aus dem Sprung während dem Gehen ein Sprung in die Y- und Z- Richtung statt einem vertikalen Sprung nur in die Y-Richtung, wenn der Fuchs steht. Dafür wurde die Jump-Funktion umgeändert, die davor die Position des Fuchses zur Gänze gesetzt hat. Das Fuchs Objekt erhält zu seiner Position, die im anderen Script entlang der Z-Achse bewegt wird durch FoxMover noch eine Änderung in die Y-Richtung mit Vector3.up. Dadurch kann die Z-Bewegung in FoxMovement und die Y-Bewegung in FoxDistance gleichzeitig passieren in Jump(). Also wird in FoxDistance.cs nicht mehr direkt die Position vom Fuchs geändert mit der Interpolation von Lerp sondern es wird ein currentOffset berechnet, der angibt, wie hoch oder niedrig die Y-Koordinate sein sollte. Dann wird davon die aktuelle Position abgezogen und übrig bleibt, was sich der Fuchs in diesem Frame entlang der vertikalen Achse bewegen muss. Diese wird dann auf die Y-Koordinate aufaddiert. 
+
+Zuletzt soll noch laut der Angabe der Schatten richtig eingestellt werden. Dafür habe ich mir in der Hierarchy das Objekt "Directional Light" genauer angesehen. Dort war unter General/Type schon Directional eingestellt, was den gewünschten Effekt erzielen sollte gemeinsam mit dem Shadow Type Soft Shadows unter Shadows. Im Prefab vom MarkerContent habe ich vom Fox-Objekt den Skinned Mesh Renderer ausgewählt und kontrolliert, dass dieser unter Lightning/Cast Shadows On ausgewählt hat. Zuletzt muss noch die Plane diesen Schatten anzeigen. Daher habe ich bei dieser eingestellt, dass sie keinen Schatten werfen soll und gleichzeitig habe ich im Material der Plane unter Surface Options/Receive Shadows die Checkbox ausgewählt. Zuletzt habe ich noch unter Assets/Settings das URP-Performant Asset ausgewählt und dort kontrolliert, dass unter Lighting Cast Shadows ausgewählt ist. 
+
+![Der Fuchs wirft einen Schatten auf die grüne Fläche](IMG_1074.PNG)
+
+Im finalen letzten Build habe ich dann alle Funktionalitäten und Kombinationen getestet und den Schatten auf der Wiese gesehen. 
+
+## 9. Verwendung von AI
+
+Es wurden die automatisch verfügbaren KI-Empfehlungsmöglichkeiten in Visual Studio genutzt bei der Entwicklung. 
+
+Wie man im PDF File "Chatprotokoll_Unity_AR_Projekt_Julia_Pospischek.pdf" sehen kann habe ich außerdem ChatGPT verwendet. Die Zusammenfassung ist mit diesem Prompt erstellt worden: "Erstelle von diesem Chat eine professionelle Protokollzusammenfassung, die ich dann herunterladen und meinem Universitätsprofessor gemeinsam mit dem fertigen Projekt vorlegen kann." Da ChatGPT daraufhin geantwortet hat: "Ja. Ich kann daraus eine **professionelle, abgabefähige Protokollzusammenfassung als Dokument** erstellen, die den Entwicklungsprozess nachvollziehbar dokumentiert – inklusive Ausgangslage, Unity-/AR-Foundation-Setup, Image Tracking, iOS-Build und Fehlerbehebung sowie der Implementierung von `FoxDistance` und `FoxMovement` mit Begründung der technischen Entscheidungen.
+
+Ich würde sie dabei **nicht als bloßes Chat-Protokoll**, sondern als technische Entwicklungsdokumentation formulieren: sachlich, universitär, mit den tatsächlich durchgeführten Schritten, Problemen, Lösungen und relevanten Codeausschnitten. Ich kann auch transparent kennzeichnen, dass KI-Unterstützung für Erklärung, Debugging und Codeentwicklung verwendet wurde.
+
+Ich erstelle dir am besten eine **DOCX-Datei**, damit du sie vor der Abgabe noch bearbeiten kannst." habe ich noch diesen Prompt nachgelegt: "Nein, ich will das nicht bearbeiten. Erstelle ein PDF. Und es soll ein Chat-Protokoll sein, weil ich damit zeige, dass ich KI-Unterstützung verwendet habe." Dies hat dann das File erstellt.
+
+Da ich die Zusammenfassung nicht gut finde hier gerne eine Zusammenfassung von mir. Ich habe ChatGPT verwendet für: 
+- Trouble Shooting beim Build für iOS auf dem Windows Laptop
+- Erstellung von allen Skripten nachdem ich meine geschrieben hatte
+- Hinterfragen und Vergleich von den erstellten Skripten und meinen Skripten sowie ein Hinterfragen der Logik, die ChatGPT angewendet hat
+- Erstellung von Anleitungen durch ChatGPT, um sie mit Anleitungen aus dem Internet und aus den Dokumentationen zu vergleichen und zu Hinterfragen
