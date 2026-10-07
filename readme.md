@@ -25,20 +25,24 @@ Um die Konfiguration von AR Foundation und dem Switch zum Macbook zu testen, hab
 Unter Assets im Project Window in Unity ist schon ein XR Ordner angelegt. In diesem konnte ich dann die Option "Reference Image Library" auswählen. Im XR Folder habe ich außerdem einen neuen Ordner "Images" erstellt und dort ein quadratisches jpg-Bild vom Unity Logo als Marker.png gespeichert. Dann habe ich der Reference Image Library dieses Bild übergeben. Die "Specifiy size" in Meter habe ich auf 0.11 gestellt, weil ich das Bild dann in eine Word-Datei eingefügt und auf 11 cm Größe eingestellt habe.
 
 ![Foto von dem Laptop mit dem Unity Logo als Marker in der eingestellten Größe in einer Word-Datei, wo mit der App dann die Plane und das Asset hinprojiziert werden](IMG_1077.jpg)
+Bild 1: Foto von dem Laptop mit dem Unity Logo als Marker in der eingestellten Größe in einer Word-Datei, wo mit der App dann die Plane und das Asset hinprojiziert werden
 
 Zum XR Origin Objekt in dem Hierarchy Window habe ich die "AR Tracked Image Manager" Konponente hinzugefügt. Unter "Serialized Library" habe ich dann die Reference Image Library eingefügt, die ich davor erstellt habe und mit dem Bild befüllt habe. Dann habe ich in der Hierarchy ein neues Objekt "MarkerContent" genannt, da unter "Tracked Image Prefab" noch kein Game Object hinterlegt ist. Ich habe dem MarkerContent das 3D-Objekt Plane hinzugefügt, ein Material erstellt und dieses der Plane angehängt sowie die Farbe auf Grün für eine Wiese eingestellt. 
 
 Dann habe ich das prefab-File vom Fuchs ebenfalls in das MarkerContent Objekt gezogen, mit der passenden Texture ausgestattet und das ganze Objekt aus der Hierarcy in einen neu angelegten Ordner "Prefab" im Project Window abgelegt. Dies erstellt eine neue prefab-Datei, die ich dann in der Reference Image Library hinzugefügt habe und den Fuchs mit dem Untergrund enthält. Danach habe ich dann das Objekt in der Hierarcy gelöscht, damit es nicht von Anfang an sichtbar ist und erst durch das Image, das getrackt wird, sichtbar wird.
 
 ![Grüne Wiese ist sichtbar aber der Fuchs nicht, weil die Handykamera mehr als 1 Meter von dem Marker entfernt ist](IMG_1076.PNG)
+Bild 2: Grüne Wiese ist sichtbar aber der Fuchs nicht, weil die Handykamera mehr als 1 Meter von dem Marker entfernt ist
 
 ## 4. Testen des Image Tracking auf iPhone mit Build für iOS
 
 Dannach habe ich einen Build für iOS in Unity auf meinem Windows Laptop erstellt und in einem neuen Ordner im Projekt gespeichert. Dann habe ich den Ordner gezippt und durch Google Drive auf mein Macbook transferiert. In dem entzippten Ordner habe ich dann das XCode Projekt geöffnet, um so für mein iPhone kompilieren zu können. Hierbei musste ich noch das automatisch gemanagte Signing einstellen und mich selbst beim Team auswählen. Dann habe ich die Build Settings das Unity Frameworks noch dahingehend einstellen müssen, dass der Wert "Enable Module Verifier" auf Nein gesetzt ist und dass für das Unity Phone und das Unity Framework der Wert "User Script Sandboxing" ebenfalls auf nein gesetzt ist. Danach konnte der Build in XCode gestartet. Auf dem verbundenen iPhone habe ich unter Datenschutz & Sicherheit den Entwicklermodus angeschalten und beim ersten Mal unter VPN und Geräteverwaltung meiner Entwickler-App, die mit meinem Account verbunden ist, vertraut. Dann habe ich die Word-Datei mit dem Bild vom Unity Logo ausgedruckt (und manchmal einfach den Bildschirm meines Win-Laptops flach auf den Tisch geklappt) und in der App erfolgreich die Wiese mit dem Fuchs erscheinen lassen. 
 
 ![Screenshot von Projekt in XCode auf dem Macbook mit der Signing Einstellung, die auf automatically gesetzt werden muss](<Screenshot 2026-10-07 at 23.01.42.png>)
+Bild 3: Screenshot von Projekt in XCode auf dem Macbook mit der Signing Einstellung, die auf automatically gesetzt werden muss
 
 ![Fuchs und grüne Wiese ist auf dem Handy sichtbar, wo der Laptop das Unity Logo anzeigt](IMG_1073.PNG)
+Bild 4: Fuchs und grüne Wiese ist auf dem Handy sichtbar, wo der Laptop das Unity Logo anzeigt
 
 ## 5. Sichtbarkeit des Assets und Springen basierend auf Entfernung
 
@@ -57,6 +61,7 @@ In Start() wird die Position des Fuches innerhalb des MarkerContent-Objekts mit 
 Dann habe ich einen Box Collider in Unity als neue Komponente für das Fuchs-Objekt in MarkerContent erstellt. Center und Size wurden so angepasst, dass die Box den ganzen Fuchs abdeckt. Somit kann jetzt in Physics.Raycast überprüft werden, ob der erstellte Ray einen Collider trifft. Passiert dies gibt Physics.Raycast true zurück und setzt mit out hit auch die Position des Objekts, das getroffen wurde. So kann dann geprüft werden, ob der Fuchs getroffen wurde, weil dann die Koordinaten des getroffenen Objekts gleich sind wie die des Fuchses oder seinen untergeordneten Objekten. Der Fuchs ist von anfang an stationär und movementActivated ist false. Wird in einem Frame der Fuchs nicht berührt, so bleibt movementActivated false und die Update-Funktion stoppt. Wird er hingegen berührt, dann wird movementActivated auf true gesetzt und die Bewegung beginnt. Wird er wieder berührt, dann setzt sich movementActivated wieder auf false.
 
 ![Fox Asset auf Plane mit grünem Material und der Collider Box mit grünem Rand im Scene Fenster in Unity](image.png)
+Bild 5: Fox Asset auf Plane mit grünem Material und der Collider Box mit grünem Rand im Scene Fenster in Unity
 
 Wenn der Fuchs berührt wurde und die Update-Funktion somit noch nicht gestoppt wurde, gibt es 2 Möglichkeiten: entweder der Fuchs geht oder er dreht sich um. Er dreht sich am Rand der Plane um, also wenn Punkt A oder Punkt B erreicht wurden, und dies setzt den Bool isRotating auf true. Dann wird die Funktion RotateFox() aufgerufen. Wenn der Fuchs nicht am Rand ist, wird MoveFox() ausgeführt.In MoveFox() wird wie in der Angabe beschrieben MoveTowards() verwendet. 
 
@@ -75,6 +80,7 @@ In FoxDistance.cs wird die selbe Idee umgesetzt. Die Entfernung wird über den F
 Zuletzt soll noch laut der Angabe der Schatten richtig eingestellt werden. Dafür habe ich mir in der Hierarchy das Objekt "Directional Light" genauer angesehen. Dort war unter General/Type schon Directional eingestellt, was den gewünschten Effekt erzielen sollte gemeinsam mit dem Shadow Type Soft Shadows unter Shadows. Im Prefab vom MarkerContent habe ich vom Fox-Objekt den Skinned Mesh Renderer ausgewählt und kontrolliert, dass dieser unter Lightning/Cast Shadows On ausgewählt hat. Zuletzt muss noch die Plane diesen Schatten anzeigen. Daher habe ich bei dieser eingestellt, dass sie keinen Schatten werfen soll und gleichzeitig habe ich im Material der Plane unter Surface Options/Receive Shadows die Checkbox ausgewählt. Zuletzt habe ich noch unter Assets/Settings das URP-Performant Asset ausgewählt und dort kontrolliert, dass unter Lighting Cast Shadows ausgewählt ist. 
 
 ![Der Fuchs wirft einen Schatten auf die grüne Fläche](IMG_1074.PNG)
+Bild 6: Der Fuchs wirft einen Schatten auf die grüne Fläche
 
 Im finalen letzten Build habe ich dann alle Funktionalitäten und Kombinationen getestet und den Schatten auf der Wiese gesehen. 
 
